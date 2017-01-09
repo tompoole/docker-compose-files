@@ -1,0 +1,28 @@
+version: '2'
+
+services:
+  elasticsearch:
+    image: elasticsearch
+    ports:
+      - 9200:9200
+  logstash:
+    image: logstash
+    links:
+      - elasticsearch
+    depends_on: 
+      - elasticsearch
+    ports:
+      - 9600:9600
+      - 12201:12201/udp
+    volumes:
+    - ./logstash.conf:/config-dir/logstash.conf
+    entrypoint: logstash -f /config-dir/logstash.conf
+  kibana:
+    image: kibana
+    ports:
+      - 5601:5601
+    depends_on:
+      - elasticsearch
+    links: 
+      - elasticsearch
+
