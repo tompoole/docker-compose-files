@@ -1,0 +1,15 @@
+version: '2'
+services:
+  graphite-statsd:
+    image: hopsoft/graphite-statsd
+    ports:
+    - 3501:80 # Graphite frontend
+    - 8125:8125/udp # statsd (UDP)
+  graphana:
+    image: grafana/grafana:4.1.1
+    links:
+      - graphite-statsd
+    depends_on: 
+      - graphite-statsd
+    ports:
+      - 3500:3000
